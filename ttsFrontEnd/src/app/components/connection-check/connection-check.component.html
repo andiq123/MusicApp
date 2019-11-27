@@ -1,0 +1,18 @@
+<mat-card class="errorCheckSection">
+  <p>
+    Server:
+  </p>
+  <div class="info">
+    <div class="loading" *ngIf="loading">
+      <mat-progress-spinner
+        diameter="20"
+        color="primary"
+        mode="indeterminate"
+      ></mat-progress-spinner>
+    </div>
+    <div class="response">
+      <span *ngIf="connValid && !loading" class="success">Online</span>
+      <span *ngIf="!connValid && !loading" class="error">Offline</span>
+    </div>
+  </div>
+</mat-card>

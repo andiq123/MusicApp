@@ -1,0 +1,15 @@
+<div [ngClass]="{ loading: loading }"></div>
+<mat-sidenav-container>
+  <mat-sidenav #sidenav role="navigation" position="end">
+    <app-sidenav (closeNav)="sidenav.toggle()"></app-sidenav>
+  </mat-sidenav>
+  <mat-sidenav-content>
+    <app-header (sidenavToggle)="sidenav.toggle()"></app-header>
+    <main>
+      <app-background-cover></app-background-cover>
+      <router-outlet></router-outlet>
+      <app-player></app-player>
+      <app-connection-check fxHide.lt-md></app-connection-check>
+    </main>
+  </mat-sidenav-content>
+</mat-sidenav-container>

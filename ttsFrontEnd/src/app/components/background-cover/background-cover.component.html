@@ -1,0 +1,10 @@
+<div class="backgroundCover" *ngIf="backgroundUrl" fxHide.xs>
+  <div
+    class="img"
+    [ngStyle]="{ 'background-image': 'url(' + backgroundUrl + ')' }"
+  ></div>
+</div>
+
+<!-- 'background-image': 'url(' + backgroundUrl + ')' background-image:
+linear-gradient(to bottom, rgba(255, 255, 255, 1), rgba(255, 255, 255, 0)),
+url('http://placekitten.com/1500/1000'); -->

@@ -1,0 +1,9 @@
+.info {
+  display: flex;
+  flex-flow: column;
+  justify-content: center;
+  text-align: center;
+}
+span {
+  font-size: 0.9rem;
+}

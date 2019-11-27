@@ -1,0 +1,58 @@
+<mat-card class="songCard" fxFlex fxLayoutAlign="center center">
+  <div class="error" *ngIf="song.error">
+    <div class="error-background"></div>
+    <h1>
+      Sorry,<br />
+      but couldn't find sources for this song :(
+    </h1>
+  </div>
+  <div class="actions" *ngIf="!emptyCard">
+    <div class="ctrlButton">
+      <!-- <img [src]="song.cover_art_url" [alt]="song.artist" class="image" /> -->
+      <div
+        id="playPause"
+        class="button"
+        [ngStyle]="{
+          'background-image': 'url(' + this.song.cover_art_url + ')'
+        }"
+        (click)="!song.playstatus.playing && !song.loading ? play() : pause()"
+      >
+        <mat-icon>{{
+          !song.playstatus.playing && !song.loading
+            ? "play_arrow"
+            : !song.loading
+            ? "pause"
+            : ""
+        }}</mat-icon>
+      </div>
+      <div class="loading" *ngIf="song.loading">
+        <mat-progress-spinner
+          diameter="50"
+          [value]="song.loadingValue"
+          color="primary"
+          mode="determinate"
+        ></mat-progress-spinner>
+      </div>
+      <div class="layer"></div>
+    </div>
+  </div>
+  <div class="infoNm">
+    <p>{{ song.name | titlecase }} - {{ song.artist | titlecase }}</p>
+  </div>
+  <div class="infoSm">
+    <p>
+      {{ song.name | titlecase | slice: 0:20 }} -
+      {{ song.artist | titlecase | slice: 0:20 }}
+    </p>
+  </div>
+  <div class="downloadButton">
+    <a
+      fxFlex="15"
+      *ngIf="!emptyCard"
+      (click)="createDownloadLink(song.url)"
+      mat-raised-button
+      color="primary"
+      ><mat-icon>arrow_downward</mat-icon></a
+    >
+  </div>
+</mat-card>

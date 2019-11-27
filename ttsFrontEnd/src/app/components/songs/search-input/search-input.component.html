@@ -1,0 +1,41 @@
+<mat-card>
+  <form
+    (ngSubmit)="onSubmit(form)"
+    #form="ngForm"
+    fxFlex
+    fxLayout="column"
+    fxLayoutAlign="center center"
+    fxLayoutGap="10px"
+  >
+    <mat-slide-toggle
+      fxHide.lt-sm
+      class="autoPlayToggler"
+      [checked]="autoPlay"
+      color="primary"
+      (change)="setAutoPlay($event)"
+      >Auto Play Next</mat-slide-toggle
+    >
+    <mat-form-field>
+      <input
+        type="text"
+        name="search"
+        ngModel
+        placeholder="Search here..."
+        matInput
+        required
+        #search="ngModel"
+      />
+      <mat-error *ngIf="search.touched && search.hasError('required')">
+        Write something boy...</mat-error
+      >
+    </mat-form-field>
+    <button
+      mat-raised-button
+      type="submit"
+      color="primary"
+      [disabled]="!form.valid"
+    >
+      Search
+    </button>
+  </form>
+</mat-card>

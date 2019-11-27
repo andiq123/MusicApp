@@ -1,0 +1,34 @@
+.errorCheckSection {
+  display: flex;
+  justify-content: space-between;
+  position: fixed;
+  bottom: 0;
+}
+
+p {
+  flex: 1;
+}
+
+.info {
+  flex: 1;
+  margin-left: 10px;
+  display: flex;
+  justify-content: center;
+}
+
+.info .response {
+  width: 50px;
+}
+
+.info .response .success {
+  color: green;
+}
+
+.info .response .error {
+  color: red;
+}
+
+.info .loading {
+  position: absolute;
+  left: 60%;
+}

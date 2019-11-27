@@ -1,0 +1,14 @@
+<section class="container">
+  <div class="searchSection">
+    <app-search-input (searchStart)="search($event)"></app-search-input>
+    <p class="error" *ngIf="serverError">
+      No song found or it's a server error, please try again =:
+    </p>
+  </div>
+  <div *ngIf="loading" class="loading">
+    <mat-progress-spinner mode="indeterminate"></mat-progress-spinner>
+  </div>
+  <div class="songSection">
+    <app-song *ngFor="let song of songs" [song]="song"></app-song>
+  </div>
+</section>

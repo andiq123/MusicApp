@@ -1,0 +1,61 @@
+.playerContainer {
+  position: fixed;
+  bottom: 0;
+  width: 50%;
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+.player {
+  background: #2f2f2f;
+  display: flex;
+  flex-flow: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.player .seekBarSection {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.player .seekBarSection mat-slider {
+  width: 400px;
+}
+
+.player .actions {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.player .buttons {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.player .buttons {
+  justify-content: flex-end;
+}
+
+@media only screen and (max-width: 938px) {
+  .player .seekBarSection mat-slider {
+    width: 200px;
+  }
+}
+@media only screen and (max-width: 600px) {
+  .playerContainer {
+    width: 100%;
+  }
+
+  .player .seekBarSection mat-slider {
+    width: 200px;
+  }
+
+  .volumeSeek {
+    display: none;
+  }
+}

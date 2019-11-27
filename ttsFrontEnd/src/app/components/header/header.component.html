@@ -1,0 +1,25 @@
+<mat-toolbar fxFlex fxLayoutAlign="space-between center" fxLayoutGap="0px">
+  <div><a routerLink="/">TTS</a></div>
+  <div class="logo" fxFlex fxHide fxLayoutAlign="center">
+    <img
+      src="assets/ganja.png"
+      routerLinkActive="animMaryJane"
+      [routerLinkActiveOptions]="{ exact: true }"
+      routerLink="/about"
+      fxHide.gt-xs
+      alt="logo"
+    />
+  </div>
+  <div fxFlex fxLayout fxLayoutAlign="flex-end" fxHide.xs>
+    <ul fxLayout class="navigation-items" fxLayoutGap="30px">
+      <li><a routerLink="/songs">Songs</a></li>
+      <li><a routerLink="/about">About</a></li>
+    </ul>
+  </div>
+
+  <div fxHide.gt-xs>
+    <button mat-icon-button (click)="onSidenavToggle()">
+      <mat-icon>menu</mat-icon>
+    </button>
+  </div>
+</mat-toolbar>

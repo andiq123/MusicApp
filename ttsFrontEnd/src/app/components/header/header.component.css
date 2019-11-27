@@ -1,0 +1,47 @@
+.navigation-items {
+  list-style-type: none;
+  padding-right: 50px;
+}
+a {
+  color: white;
+  text-decoration: none;
+}
+.nav-caption {
+  display: inline-block;
+  padding-left: 6px;
+}
+
+.logo {
+  height: 100%;
+}
+
+.logo img {
+  width: 10%;
+  transition: 2s ease-in-out;
+}
+
+.logo img:hover {
+  transform: rotate(90deg);
+}
+.animMaryJane {
+  animation: animGanja 5s ease-in-out forwards alternate;
+}
+
+@keyframes animGanja {
+  from {
+    transform: translateY(0);
+    opacity: 1;
+  }
+  to {
+    transform: translateY(250px);
+    width: 100%;
+    height: 100%;
+    opacity: 0.8;
+  }
+}
+
+@media only screen and (max-width: 600px) {
+  .logo img {
+    width: 20%;
+  }
+}

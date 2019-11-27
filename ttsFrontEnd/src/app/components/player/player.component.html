@@ -1,0 +1,52 @@
+<section *ngIf="song" class="playerContainer">
+  <!-- <mat- fxFlex="700px" fxLayoutAlign="center" fxLayoutGap="15px"> -->
+  <!-- <audio controls [src]="song.url" #player></audio> -->
+  <mat-card class="player">
+    <div class="seekBarSection">
+      <mat-slider
+        color="primary"
+        [max]="duration"
+        [value]="timeSeek"
+        (change)="setTime($event)"
+      ></mat-slider>
+      <div class="timeLabel">
+        {{ currentTime / 60 | number: '1.0-0' }}:{{
+          currentTime % 60 | number: '2.0-0'
+        }}/{{ duration / 60 | number: '1.0-0' }}:{{
+          duration % 60 | number: '2.0-0'
+        }}
+      </div>
+    </div>
+    <div class="actions">
+      <div class="buttons">
+        <button mat-button (click)="playPrevious()">
+          <mat-icon>skip_previous</mat-icon>
+        </button>
+        <button *ngIf="!song.playstatus.playing" mat-button (click)="play()">
+          <mat-icon>play_arrow</mat-icon>
+        </button>
+        <button *ngIf="song.playstatus.playing" mat-button (click)="pause()">
+          <mat-icon>pause</mat-icon>
+        </button>
+        <button mat-button (click)="playNext()">
+          <mat-icon>skip_next</mat-icon>
+        </button>
+      </div>
+      <mat-slider
+        class="volumeSeek"
+        color="primary"
+        [value]="volumeSeek"
+        max="10"
+        (change)="setVolume($event)"
+      ></mat-slider>
+    </div>
+  </mat-card>
+</section>
+
+<!-- <div class="volumeSection">
+    <mat-slider
+      [value]="volumeSeek"
+      max="10"
+      (change)="setVolume($event)"
+    ></mat-slider>
+  </div> -->
