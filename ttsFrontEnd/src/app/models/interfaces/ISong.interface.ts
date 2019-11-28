@@ -1,6 +1,7 @@
-import { IPlaystate } from './IPlaystate.interface';
+import { IPlaystate } from "./IPlaystate.interface";
 
 export interface ISong {
+  id?: number;
   name: string;
   artist?: string;
   album?: string;

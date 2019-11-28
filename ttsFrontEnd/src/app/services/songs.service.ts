@@ -19,7 +19,7 @@ export class SongsService {
   currentSongChanged = new Subject<Song>();
   backgroundChanged = new Subject<{ url: string; name: string }>();
   songs: Song[];
-  currentSong: Song;
+  index: number;
 
   constructor(private stream: StreamService, private http: HttpClient) {}
   searchSongs(text: string) {
@@ -29,7 +29,6 @@ export class SongsService {
         (songs: Song[]) => {
           if (this.songs) this.songs = [...this.songs, ...songs];
           else this.songs = songs;
-          this.songsUpdated.next(this.songs.slice());
         },
         (error: Error) => {
           this.errorUpdated.next(error.message);
@@ -37,8 +36,10 @@ export class SongsService {
       );
       this.http.get<Song[]>(`${environment.apiUrl}/muzfan/${text}`).subscribe(
         (muzfanSongs: Song[]) => {
+          this.index = 0;
           if (this.songs) this.songs = [...muzfanSongs, ...this.songs];
           else this.songs = muzfanSongs;
+          this.songs.forEach(x => (x.id = this.index++));
           this.songsUpdated.next(this.songs.slice());
         },
         (error: Error) => {
@@ -48,6 +49,7 @@ export class SongsService {
     } else {
       this.songs = [
         {
+          id: 0,
           album: "adasdasd",
           artist: "boomer",
           cover_art_url:
@@ -57,6 +59,7 @@ export class SongsService {
           playstatus: playState.stopped
         },
         {
+          id: 1,
           album: "sadasd",
           artist: "dasder",
           cover_art_url:
@@ -70,77 +73,63 @@ export class SongsService {
     }
   }
 
-  previous() {
-    if (this.songs) {
-      let previous = this.songs[this.songs.indexOf(this.currentSong) - 1];
-      if (previous) {
-        this.setLoadingState(true, previous);
-        this.currentSongChanged.next(previous);
-        this.backgroundChanged.next({
-          url: previous.cover_art_url,
-          name: previous.name
-        });
-      }
+  previous(song: Song) {
+    let previous = this.songs[this.songs.indexOf(song) - 1];
+    if (previous) {
+      this.setLoadingState(true, previous.id);
+      this.currentSongChanged.next(previous);
+      this.backgroundChanged.next({
+        url: previous.cover_art_url,
+        name: previous.artist
+      });
     }
   }
 
   setCurrentSong(song: Song) {
-    this.currentSong = song;
-    this.currentSongChanged.next(this.currentSong);
+    let anyLoading;
+    if (this.songs) anyLoading = this.songs.find(x => x.loading == true);
+    if (!anyLoading) {
+      this.setLoadingState(true, song.id);
+      this.currentSongChanged.next(song);
+      this.backgroundChanged.next({
+        url: song.cover_art_url,
+        name: song.artist
+      });
+    }
   }
 
   setLoadingValue(value: number) {
-    let song = this.songs.indexOf(this.currentSong);
-    this.songs[song].loadingValue = value;
+    let song = this.songs.find(x => x.loading == true);
+    if (song) song.loadingValue = value;
   }
 
-  next() {
-    if (this.songs) {
-      let next = this.songs[this.songs.indexOf(this.currentSong) + 1];
-      if (next) {
-        this.setLoadingState(true, next);
-        this.currentSongChanged.next(next);
-        this.backgroundChanged.next({
-          url: next.cover_art_url,
-          name: next.name
-        });
-      }
+  next(song: Song) {
+    let next = this.songs[this.songs.indexOf(song) + 1];
+    if (next) {
+      this.setLoadingState(true, next.id);
+      this.currentSongChanged.next(next);
+      this.backgroundChanged.next({
+        url: next.cover_art_url,
+        name: next.artist
+      });
     }
   }
 
-  setPlayState(playStatus: Playstate) {
-    this.currentSong.playstatus = playStatus;
-    this.currentSongPlaystateUpdated.next(this.currentSong.playstatus);
-  }
-
-  setLoadingState(loading: boolean, song: Song) {
-    if (this.songs) {
-      const songIndex = this.songs.indexOf(song);
-      this.songs[songIndex].loading = loading;
+  setPlayState(playStatus: Playstate, id: number) {
+    const song = this.songs.find(x => x.id === id);
+    if (song) {
+      song.playstatus = playStatus;
+      this.currentSongPlaystateUpdated.next(song.playstatus);
     }
   }
 
-  setError(song: Song, error: boolean) {
-    this.errorHappened.next({ song, error });
+  setLoadingState(loading: boolean, id: number) {
+    const song = this.songs.find(x => x.id === id);
+    if (song) song.loading = loading;
+  }
+
+  setError(id: number, error: boolean) {
+    const song = this.songs.find(x => x.id === id);
+    if (song) this.errorHappened.next({ song, error });
   }
 }
-
-// uploadFromWeb(name: string, link: string) {
-//   if (link.includes("mixmuz")) link = link.replace("//", "https://");
-//   this.http
-//     .post(
-//       `${environment.apiUrl}/mixmuz/download`,
-//       {
-//         name,
-//         link
-//       },
-//       { reportProgress: true, observe: "events" }
-//     )
-//     .subscribe(event => {
-//       if (event.type === HttpEventType.UploadProgress)
-//         console.log(Math.round((100 * event.loaded) / event.total));
-//       else if (event.type === HttpEventType.Response) {
-//         console.log("Upload success.");
-//       }
-//     });
-// }

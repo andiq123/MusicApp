@@ -10,19 +10,10 @@ import { environment } from "src/environments/environment";
 })
 export class AppComponent implements OnInit {
   loading: boolean = false;
-  constructor(
-    private signalRService: SignalRService,
-    private http: HttpClient
-  ) {}
+  constructor(private signalRService: SignalRService) {}
 
   ngOnInit(): void {
     this.signalRService.startConnection();
     this.signalRService.CommandListener();
-    this.startHttpRequest();
-  }
-  startHttpRequest() {
-    this.http
-      .get(`${environment.apiUrl.split("api")[0]}buffer`)
-      .subscribe(res => console.log(res));
   }
 }

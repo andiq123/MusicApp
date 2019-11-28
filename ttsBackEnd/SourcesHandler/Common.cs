@@ -58,7 +58,7 @@ namespace test.SourcesHandler
             await Task.Run(() =>
               {
                   string[] files = Directory.GetFiles(Path.Combine(System.Environment.CurrentDirectory, "wwwroot", "Uploads"));
-                  if (files.Length > 30)
+                  if (files.Length > 50)
                       foreach (var file in files)
                           if (new Random().Next(0, 2) == 1) File.Delete(file);
               });

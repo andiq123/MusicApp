@@ -12,9 +12,7 @@
       <div
         id="playPause"
         class="button"
-        [ngStyle]="{
-          'background-image': 'url(' + this.song.cover_art_url + ')'
-        }"
+        #backgroundDiv
         (click)="!song.playstatus.playing && !song.loading ? play() : pause()"
       >
         <mat-icon>{{
@@ -49,7 +47,7 @@
     <a
       fxFlex="15"
       *ngIf="!emptyCard"
-      (click)="createDownloadLink(song.url)"
+      (click)="downloadSong(song.url)"
       mat-raised-button
       color="primary"
       ><mat-icon>arrow_downward</mat-icon></a

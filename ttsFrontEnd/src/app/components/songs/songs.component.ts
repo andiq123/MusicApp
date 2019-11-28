@@ -12,7 +12,6 @@ export class SongsComponent implements OnInit {
   loading: boolean = false;
   songs: Song[] = [];
   serverError: boolean = false;
-  index: number;
   development: boolean = false;
 
   constructor(
@@ -23,13 +22,11 @@ export class SongsComponent implements OnInit {
   ngOnInit() {
     this.development = this.stream.getDev();
     this.songService.songsUpdated.subscribe((songs: Song[]) => {
-      this.index++;
       this.songs = songs;
       if (this.songs.length == 0) {
-        this.songs = [{ name: "Nothing Found" }];
+        this.songs = [{ id: 0, name: "Nothing Found" }];
       }
-      if (this.index == 2) this.loading = false;
-      if (this.development) this.loading = false;
+      this.loading = false;
     });
 
     this.songService.errorUpdated.subscribe(
@@ -49,7 +46,6 @@ export class SongsComponent implements OnInit {
 
   search(searchText: string) {
     this.loading = true;
-    this.index = 0;
     this.serverError = false;
     this.songs = null;
     this.songService.searchSongs(searchText);
