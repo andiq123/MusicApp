@@ -20,32 +20,14 @@ export class SongsService {
   backgroundChanged = new Subject<{ url: string; name: string }>();
   songs: Song[];
   index: number;
+  indexx: number;
 
   constructor(private stream: StreamService, private http: HttpClient) {}
   searchSongs(text: string) {
     this.songs = null;
     if (!this.stream.development) {
-      this.http.get<Song[]>(`${environment.apiUrl}/mixmuz/${text}`).subscribe(
-        (songs: Song[]) => {
-          if (this.songs) this.songs = [...this.songs, ...songs];
-          else this.songs = songs;
-        },
-        (error: Error) => {
-          this.errorUpdated.next(error.message);
-        }
-      );
-      this.http.get<Song[]>(`${environment.apiUrl}/muzfan/${text}`).subscribe(
-        (muzfanSongs: Song[]) => {
-          this.index = 0;
-          if (this.songs) this.songs = [...muzfanSongs, ...this.songs];
-          else this.songs = muzfanSongs;
-          this.songs.forEach(x => (x.id = this.index++));
-          this.songsUpdated.next(this.songs.slice());
-        },
-        (error: Error) => {
-          this.errorUpdated.next(error.message);
-        }
-      );
+      this.getMixMuzSongs(text);
+      this.getMuzFanSongs(text);
     } else {
       this.songs = [
         {
@@ -71,6 +53,41 @@ export class SongsService {
       ];
       this.songsUpdated.next(this.songs);
     }
+  }
+
+  getMuzFanSongs(text: string) {
+    this.http.get<Song[]>(`${environment.apiUrl}/muzfan/${text}`).subscribe(
+      (muzfanSongs: Song[]) => {
+        if (this.songs) this.songs = [...this.songs, ...muzfanSongs];
+        else this.songs = muzfanSongs;
+        this.indexSongsAndAlert();
+      },
+      (error: Error) => {
+        this.errorUpdated.next(error.message);
+      }
+    );
+  }
+
+  getMixMuzSongs(text: string) {
+    this.http.get<Song[]>(`${environment.apiUrl}/mixmuz/${text}`).subscribe(
+      (songs: Song[]) => {
+        if (this.songs) this.songs = [...this.songs, ...songs];
+        else this.songs = songs;
+        this.indexSongsAndAlert();
+      },
+      (error: Error) => {
+        this.errorUpdated.next(error.message);
+      }
+    );
+  }
+
+  returnSongs() {
+    if (this.songs) return this.songs;
+  }
+  indexSongsAndAlert() {
+    this.index = 0;
+    this.songs.forEach(x => (x.id = this.index++));
+    this.songsUpdated.next(this.songs.slice());
   }
 
   previous(song: Song) {

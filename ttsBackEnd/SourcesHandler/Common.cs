@@ -24,18 +24,18 @@ namespace test.SourcesHandler
         }
         public static async Task<string> downloadSong(string name, string url, IHubContext<BufferHub> Hub)
         {
-            _hub = Hub;
             string destination = Path.Combine(System.Environment.CurrentDirectory, "wwwroot", "Uploads", checkName(name) + ".mp3");
             if (File.Exists(destination)) return destination;
-            else return await uploadSong(url, destination, Hub);
+            _hub = Hub;
+            await uploadSong(url, destination, Hub);
+            return destination;
         }
 
-        public static async Task<string> uploadSong(string url, string destination, IHubContext<BufferHub> Hub)
+        public static async Task uploadSong(string url, string destination, IHubContext<BufferHub> Hub)
         {
             WebClient wc = new WebClient();
             wc.DownloadProgressChanged += progressChanged;
             await wc.DownloadFileTaskAsync(new Uri(url), destination);
-            return destination;
         }
 
         private async static void progressChanged(object sender, DownloadProgressChangedEventArgs e)

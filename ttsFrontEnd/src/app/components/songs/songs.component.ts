@@ -10,7 +10,7 @@ import { StreamService } from "src/app/services/stream.service";
 })
 export class SongsComponent implements OnInit {
   loading: boolean = false;
-  songs: Song[] = [];
+  songs: Song[];
   serverError: boolean = false;
   development: boolean = false;
 
@@ -20,6 +20,7 @@ export class SongsComponent implements OnInit {
   ) {}
 
   ngOnInit() {
+    this.songs = this.songService.returnSongs();
     this.development = this.stream.getDev();
     this.songService.songsUpdated.subscribe((songs: Song[]) => {
       this.songs = songs;

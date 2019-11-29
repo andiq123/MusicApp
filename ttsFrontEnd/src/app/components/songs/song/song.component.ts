@@ -59,7 +59,7 @@ export class SongComponent implements OnInit, AfterViewInit {
       : this.song.artist;
     this.stream.getSongFromServer(name, this.song.url).subscribe(data => {
       this.songService.setLoadingState(false, this.song.id);
-      saveAs(data, name);
+      saveAs(data, name + ".mp3");
     });
   }
 }
