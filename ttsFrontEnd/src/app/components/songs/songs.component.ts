@@ -27,9 +27,10 @@ export class SongsComponent implements OnInit {
       if (this.songs.length == 0) {
         this.songs = [{ id: 0, name: "Nothing Found" }];
       }
-      this.loading = false;
     });
-
+    this.songService.loadingSong.subscribe(
+      (state: boolean) => (this.loading = state)
+    );
     this.songService.errorUpdated.subscribe(
       () => {
         this.serverError = true;

@@ -15,15 +15,16 @@ export class SongsService {
   errorUpdated = new Subject<string>();
   songsUpdated = new Subject<Song[]>();
   loadingStateUpdate = new Subject<boolean>();
+  loadingSong = new Subject<boolean>();
   currentSongPlaystateUpdated = new Subject<Playstate>();
   currentSongChanged = new Subject<Song>();
   backgroundChanged = new Subject<{ url: string; name: string }>();
   songs: Song[];
   index: number;
-  indexx: number;
 
   constructor(private stream: StreamService, private http: HttpClient) {}
   searchSongs(text: string) {
+    this.index = 0;
     this.songs = null;
     if (!this.stream.development) {
       this.getMixMuzSongs(text);
@@ -60,6 +61,7 @@ export class SongsService {
       (muzfanSongs: Song[]) => {
         if (this.songs) this.songs = [...this.songs, ...muzfanSongs];
         else this.songs = muzfanSongs;
+        this.index++;
         this.indexSongsAndAlert();
       },
       (error: Error) => {
@@ -73,6 +75,7 @@ export class SongsService {
       (songs: Song[]) => {
         if (this.songs) this.songs = [...this.songs, ...songs];
         else this.songs = songs;
+        this.index++;
         this.indexSongsAndAlert();
       },
       (error: Error) => {
@@ -85,9 +88,9 @@ export class SongsService {
     if (this.songs) return this.songs;
   }
   indexSongsAndAlert() {
-    this.index = 0;
     this.songs.forEach(x => (x.id = this.index++));
     this.songsUpdated.next(this.songs.slice());
+    if (this.index > 1) this.loadingSong.next(false);
   }
 
   previous(song: Song) {

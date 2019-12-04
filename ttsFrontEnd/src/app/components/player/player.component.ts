@@ -84,15 +84,19 @@ export class PlayerComponent implements OnInit {
   }
 
   playPrevious() {
-    const song = this.song;
-    this.stop();
-    this.songService.previous(song);
+    if (!this.song.loading) {
+      const song = this.song;
+      this.stop();
+      this.songService.previous(song);
+    }
   }
 
   playNext() {
-    const song = this.song;
-    this.stop();
-    this.songService.next(song);
+    if (!this.song.loading) {
+      const song = this.song;
+      this.stop();
+      this.songService.next(song);
+    }
   }
 
   setTime(e: MatSlider) {
@@ -108,7 +112,9 @@ export class PlayerComponent implements OnInit {
       this.songService.setLoadingState(false, this.song.id);
       if (this.autoPlay) this.playNext();
     };
-    this.player.onplay = () => (this.player.volume = this.volumeSeek * 0.1);
+    this.player.onplay = () => {
+      this.player.volume = this.volumeSeek * 0.1;
+    };
     this.player.onplaying = () => {
       this.duration = this.player.duration;
       this.songService.setPlayState(playState.playing, this.song.id);
