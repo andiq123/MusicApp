@@ -28,7 +28,7 @@ namespace back
         {
             services.AddCors(options =>
             {
-                options.AddPolicy("CorsPolicy", Builder => Builder.WithOrigins("http://localhost:4200").AllowAnyHeader().AllowAnyMethod().AllowCredentials());
+                options.AddPolicy("CorsPolicy", Builder => Builder.AllowAnyOrigin().AllowAnyHeader().AllowAnyMethod());
             });
             services.AddSignalR();
             services.AddControllers();
