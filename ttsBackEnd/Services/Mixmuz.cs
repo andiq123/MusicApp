@@ -11,6 +11,7 @@ namespace ttsBackEnd.Services
     {
         private readonly Scrapper _scrapper;
         private readonly IOptions<Sources> _config;
+
         public Mixmuz(IOptions<Sources> config)
         {
             _config = config;
@@ -35,7 +36,7 @@ namespace ttsBackEnd.Services
                 {
                     CoverArt = $"https://icon-library.net/images/song-icon-png/song-icon-png-23.jpg";
                 }
-                string Url = song.QuerySelector("a.down").GetAttribute("href");
+                string Url = "https:" + song.QuerySelector("a.down").GetAttribute("href");
                 songList.Add(new Song
                 {
                     name = Name,

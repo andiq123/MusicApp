@@ -19,7 +19,6 @@
     },
     "back": {
       "commandName": "Project",
-      "launchBrowser": true,
       "launchUrl": "songs",
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development"
