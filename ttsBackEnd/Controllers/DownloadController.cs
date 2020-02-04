@@ -4,11 +4,12 @@ using System.Net;
 using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
+using back.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.SignalR;
 using Microsoft.Net.Http.Headers;
 using test.Models;
-using test.SourcesHandler;
+
 using ttsBackEnd.HubConfig;
 
 namespace test.Controllers
@@ -17,19 +18,19 @@ namespace test.Controllers
     [Route("api/[controller]")]
     public class DownloadController : ControllerBase
     {
-        private readonly IHubContext<BufferHub> _hub;
+        private readonly Download _download;
 
-        public DownloadController(IHubContext<BufferHub> hub)
+        public DownloadController(IHubContext<StatusHub> hub)
         {
-            _hub = hub;
+            _download = new Download(hub);
         }
 
         [HttpPost]
-        [Route("song")]
-        public async Task<IActionResult> GetSong(DownFileModel file)
+        public async Task<IActionResult> Get(DownFileModel file)
         {
             if (file == null) BadRequest("No file was added");
-            return File(System.IO.File.OpenRead(await Common.downloadSong(file.name, file.link, _hub)), "audio/mpeg");
+            var fileFromServer = await _download.downloadSongFromSource(file);
+            return File(System.IO.File.OpenRead(fileFromServer), "audio/mpeg");
         }
     }
 }

@@ -11,6 +11,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using ttsBackEnd.HubConfig;
+using ttsBackEnd.Models;
 
 namespace back
 {
@@ -30,6 +31,7 @@ namespace back
             {
                 options.AddPolicy("CorsPolicy", Builder => Builder.AllowAnyOrigin().AllowAnyHeader().AllowAnyMethod());
             });
+            services.Configure<Sources>(Configuration.GetSection("Sources"));
             services.AddSignalR();
             services.AddControllers();
         }
@@ -43,15 +45,15 @@ namespace back
             }
             app.UseHttpsRedirection();
             app.UseRouting();
-            app.UseCors("CorsPolicy");
+            //app.UseCors("CorsPolicy");
             app.UseAuthorization();
             app.UseDefaultFiles();
             app.UseStaticFiles();
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();
-                endpoints.MapFallbackToController("Index", "Fallback");
-                endpoints.MapHub<BufferHub>("/buffer");
+                // endpoints.MapFallbackToController("Index", "Fallback");
+                endpoints.MapHub<StatusHub>("/status");
             });
         }
     }

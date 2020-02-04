@@ -1,27 +1,25 @@
-using System;
 using System.Collections.Generic;
-using System.IO;
-using System.Net;
-using System.Net.Http;
 using System.Threading.Tasks;
 using AngleSharp.Html.Dom;
-using AngleSharp.Html.Parser;
 using back.Models;
-using test.SourcesHandler;
+using Microsoft.Extensions.Options;
+using ttsBackEnd.Models;
 
-namespace back
+namespace ttsBackEnd.Services
 {
-
-    public class MixmuzScraper : IWebScraper
+    public class Mixmuz
     {
-        private readonly string url;
-        public MixmuzScraper(string url)
+        private readonly Scrapper _scrapper;
+        private readonly IOptions<Sources> _config;
+        public Mixmuz(IOptions<Sources> config)
         {
-            this.url = url;
+            _config = config;
+            _scrapper = new Scrapper();
         }
-        public async Task<List<Song>> GetSongs()
+
+        public async Task<IEnumerable<Song>> Get(string name)
         {
-            IHtmlDocument document = await Common.GetDocument(url);
+            IHtmlDocument document = await _scrapper.GetPage(_config.Value.MixmuzBaseUrl + name);
             List<Song> songList = new List<Song>();
             var canzoni = document.QuerySelectorAll("div.item");
             foreach (var song in canzoni)
@@ -44,20 +42,10 @@ namespace back
                     artist = Artist,
                     album = Name,
                     cover_art_url = CoverArt,
-                    url = Url,
-                    loading = false
+                    url = Url
                 });
             }
             return songList;
-        }
-
-        public async Task<bool> connectionTest()
-        {
-            IHtmlDocument document = await Common.GetDocument(url);
-            var songCheck = document.QuerySelector("div.item a.play").GetAttribute("title");
-            if (songCheck != null)
-                return true;
-            else return false;
         }
     }
 }
