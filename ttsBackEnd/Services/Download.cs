@@ -12,23 +12,25 @@ namespace back.Services
 {
     public class Download
     {
+        private readonly string root = Path.Combine(System.Environment.CurrentDirectory, "wwwroot", "Uploads");
         private readonly IHubContext<StatusHub> _hub;
+
         public Download(IHubContext<StatusHub> hub)
         {
             _hub = hub;
+            //Checks the directory, ensure existing
+            if (!Directory.Exists(root)) Directory.CreateDirectory(root);
         }
 
         public async Task<string> downloadSongFromSource(DownFileModel file)
         {
-                file.name = checkName(file.name);
-                string root = Path.Combine(System.Environment.CurrentDirectory, "wwwroot", "Uploads");
-                if (!Directory.Exists(root)) Directory.CreateDirectory(root);
-                string destination = Path.Combine(root, file.name + ".mp3");
-                if (File.Exists(destination)) return destination;
-                WebClient wc = new WebClient();
-                wc.DownloadProgressChanged += progressChanged;
-                await wc.DownloadFileTaskAsync(new Uri(file.link), destination);
-                return destination;
+            file.name = checkName(file.name);
+            string destination = Path.Combine(root, file.name + ".mp3");
+            if (File.Exists(destination)) return destination;
+            WebClient wc = new WebClient();
+            wc.DownloadProgressChanged += progressChanged;
+            await wc.DownloadFileTaskAsync(new Uri(file.link), destination);
+            return destination;
         }
 
         private async void progressChanged(object sender, DownloadProgressChangedEventArgs e)

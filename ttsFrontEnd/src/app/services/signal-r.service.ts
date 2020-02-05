@@ -11,7 +11,7 @@ export class SignalRService {
   constructor(private songService: SongsService) {}
   public startConnection = () => {
     this.hubConnection = new signalR.HubConnectionBuilder()
-      .withUrl(`${environment.apiUrl.split("api")[0]}buffer`)
+      .withUrl(`${environment.apiUrl.split("api")[0]}status`)
       .build();
 
     this.hubConnection

@@ -51,9 +51,9 @@ namespace back
             app.UseStaticFiles();
             app.UseEndpoints(endpoints =>
             {
+                endpoints.MapHub<StatusHub>("/status");
                 endpoints.MapControllers();
                 // endpoints.MapFallbackToController("Index", "Fallback");
-                endpoints.MapHub<StatusHub>("/status");
             });
         }
     }
