@@ -33,8 +33,8 @@ namespace ttsBackEnd.Controllers
             tasks.Add(_muzFan.Get(name));
             var results = await Task.WhenAll(tasks);
             List<Song> songs = new List<Song>();
-            foreach (var item in results)
-                songs.AddRange(item);
+            Parallel.ForEach<IEnumerable<Song>>(results, item => songs.AddRange(item));
+            if (songs.Count == 0) return NotFound();
             return songs;
         }
 

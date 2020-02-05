@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using AngleSharp.Dom;
 using AngleSharp.Html.Dom;
 using back.Models;
 using Microsoft.Extensions.Options;
@@ -22,31 +23,37 @@ namespace ttsBackEnd.Services
         {
             IHtmlDocument document = await _scrapper.GetPage(_options.Value.MuzfanBaseUrl + name);
             List<Song> songList = new List<Song>();
-            var canzoni = document.QuerySelectorAll("div.track-item");
-            foreach (var song in canzoni)
+            IHtmlCollection<IElement> canzoni = document.QuerySelectorAll("div.track-item");
+            await Task.Factory.StartNew(() =>
             {
-                string Name = song.GetAttribute("no name");
-                string Artist = song.GetAttribute("data-artist");
-                string CoverArt;
-                try
-                {
-                    CoverArt = song.GetAttribute("data-img");
-                }
-                catch
-                {
-                    CoverArt = $"https://icon-library.net/images/song-icon-png/song-icon-png-23.jpg";
-                }
-                string Url = song.GetAttribute("data-track");
-                songList.Add(new Song
-                {
-                    name = Name,
-                    artist = Artist,
-                    album = Name,
-                    cover_art_url = CoverArt,
-                    url = Url
-                });
-            }
+
+                Parallel.ForEach<IElement>(canzoni, song =>
+                  {
+                      string Name = song.GetAttribute("no name");
+                      string Artist = song.GetAttribute("data-artist");
+                      string CoverArt;
+                      try
+                      {
+                          CoverArt = song.GetAttribute("data-img");
+                      }
+                      catch
+                      {
+                          CoverArt = $"https://icon-library.net/images/song-icon-png/song-icon-png-23.jpg";
+                      }
+                      string Url = song.GetAttribute("data-track");
+                      songList.Add(new Song
+                      {
+                          name = Name,
+                          artist = Artist,
+                          album = Name,
+                          cover_art_url = CoverArt,
+                          url = Url
+                      });
+                  });
+
+            });
             return songList;
+
         }
     }
 }
