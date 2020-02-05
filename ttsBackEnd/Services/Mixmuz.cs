@@ -24,7 +24,7 @@ namespace ttsBackEnd.Services
             IHtmlDocument document = await _scrapper.GetPage(_config.Value.MixmuzBaseUrl + name);
             List<Song> songList = new List<Song>();
             IHtmlCollection<IElement> canzoni = document.QuerySelectorAll("div.item");
-            await Task.Factory.StartNew(() =>
+            await Task.Run(() =>
             {
                 Parallel.ForEach<IElement>(canzoni, (song) =>
                     {
