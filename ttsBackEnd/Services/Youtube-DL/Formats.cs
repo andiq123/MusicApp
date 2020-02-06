@@ -7,9 +7,10 @@ using System.Threading.Tasks;
 
 namespace back.Services.YoutubeDL
 {
-    public class Dictionary<TKey, TValue>
+    public enum Formats
     {
-
+        Audio = 1,
+        Video = 2
 
     }
 }

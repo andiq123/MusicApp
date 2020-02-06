@@ -8,7 +8,7 @@ using ttsBackEnd.Models;
 
 namespace ttsBackEnd.Services
 {
-    public class Mixmuz
+    public class Mixmuz : ISource
     {
         private readonly Scrapper _scrapper;
         private readonly IOptions<Sources> _config;

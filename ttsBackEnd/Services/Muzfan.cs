@@ -8,7 +8,7 @@ using ttsBackEnd.Models;
 
 namespace ttsBackEnd.Services
 {
-    public class Muzfan
+    public class Muzfan : ISource
     {
         private readonly Scrapper _scrapper;
         private readonly IOptions<Sources> _options;

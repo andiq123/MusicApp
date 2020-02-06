@@ -15,8 +15,8 @@ namespace ttsBackEnd.Controllers
     public class MusicController : ControllerBase
     {
         private readonly IOptions<Sources> _config;
-        private readonly Mixmuz _mixMuz;
-        private readonly Muzfan _muzFan;
+        private readonly ISource _mixMuz;
+        private readonly ISource _muzFan;
 
         public MusicController(IOptions<Sources> config)
         {
