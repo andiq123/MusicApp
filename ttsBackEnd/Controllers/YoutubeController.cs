@@ -1,9 +1,9 @@
 ﻿using back.Services;
+using back.Services.YoutubeDL;
+using back.Services.YoutubeDL.Entities;
+using back.Services.YoutubeDL.Models;
 using Microsoft.AspNetCore.Mvc;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+using System.IO;
 using System.Threading.Tasks;
 
 namespace back.Controllers
@@ -12,11 +12,28 @@ namespace back.Controllers
     [Route("api/[controller]")]
     public class YoutubeController : ControllerBase
     {
-        [HttpPost]
-        public ActionResult Get(YTArguments args)
+        private readonly YtbConverter _ytbConverter;
+
+        public YoutubeController()
         {
-            var ytbConv = new YtbConverter();
-            var convertedSongPath = ytbConv.ConvertSong(args);
+            _ytbConverter = new YtbConverter();
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> GetInfo(YoutubeDto file)
+        {
+            if (file == null) return BadRequest();
+            Youtube fileInfo = await _ytbConverter.GetInfo(file);
+            return Ok(fileInfo);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> GetVideo(YoutubeDto file)
+        {
+            if (file == null) return BadRequest();
+            Youtube fileInfo = await _ytbConverter.GetInfo(file);
+            var convertedSongPath = await _ytbConverter.Convert(fileInfo);
+            if (!FileHelper.CheckExist(convertedSongPath)) return BadRequest("Something went bad in the server");
             return File(System.IO.File.OpenRead(convertedSongPath), "audio/mpeg");
         }
     }
