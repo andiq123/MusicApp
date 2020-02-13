@@ -5,9 +5,9 @@ namespace test.Models
     public class DownFileModel
     {
         [Required]
-        public string name { get; set; }
+        public string Name { get; set; }
 
         [Required]
-        public string link { get; set; }
+        public string Url { get; set; }
     }
 }

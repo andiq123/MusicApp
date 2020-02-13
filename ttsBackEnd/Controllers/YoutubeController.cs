@@ -1,7 +1,9 @@
 ﻿using back.Services;
+using back.Services.Helpers;
 using back.Services.YoutubeDL;
 using back.Services.YoutubeDL.Entities;
 using back.Services.YoutubeDL.Models;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System.IO;
 using System.Threading.Tasks;
@@ -32,9 +34,9 @@ namespace back.Controllers
         public async Task<IActionResult> GetVideo(YoutubeDto file)
         {
             if (file == null) return BadRequest();
-            if (_fileInfo == null) _fileInfo = await _ytbConverter.GetInfo(file);
+            else if (_fileInfo == null) _fileInfo = await _ytbConverter.GetInfo(file);
             var convertedSongPath = await _ytbConverter.Convert(_fileInfo);
-            if (!FileHelper.CheckExist(convertedSongPath)) return BadRequest("Something went bad in the server");
+            if (!FileHelper.CheckFileExist(convertedSongPath)) return StatusCode(StatusCodes.Status500InternalServerError, "Something went bad in the server");
             return File(System.IO.File.OpenRead(convertedSongPath), "audio/mpeg");
         }
     }

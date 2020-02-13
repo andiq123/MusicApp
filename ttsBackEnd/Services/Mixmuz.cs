@@ -28,25 +28,25 @@ namespace ttsBackEnd.Services
             {
                 Parallel.ForEach<IElement>(canzoni, (song) =>
                     {
-                        string Name = song.QuerySelector("div.title span.t").InnerHtml;
-                        string Artist = song.QuerySelector("div.title span.a a").InnerHtml;
-                        string CoverArt;
+                        string name = song.QuerySelector("div.title span.t").InnerHtml;
+                        string artist = song.QuerySelector("div.title span.a a").InnerHtml;
+                        string coverArt;
                         try
                         {
-                            CoverArt = song.QuerySelector("a.play img").GetAttribute("src");
+                            coverArt = song.QuerySelector("a.play img").GetAttribute("src");
                         }
                         catch
                         {
-                            CoverArt = $"https://icon-library.net/images/song-icon-png/song-icon-png-23.jpg";
+                            coverArt = $"https://icon-library.net/images/song-icon-png/song-icon-png-23.jpg";
                         }
-                        string Url = "https:" + song.QuerySelector("a.down").GetAttribute("href");
+                        string url = "https:" + song.QuerySelector("a.down").GetAttribute("href");
                         songList.Add(new Song
                         {
-                            name = Name,
-                            artist = Artist,
-                            album = Name,
-                            cover_art_url = CoverArt,
-                            url = Url
+                            Name = name,
+                            Artist = artist,
+                            Album = name,
+                            Cover_art_url = coverArt,
+                            Url = url
                         });
                     });
             });

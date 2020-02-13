@@ -1,20 +1,14 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Diagnostics;
-using System.IO;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
+using back.Services.Helpers;
 using back.Services.Youtube_DL.Models;
 using back.Services.YoutubeDL;
-using back.Services.YoutubeDL.Entities;
 
 namespace back.Services
 {
     public class ProcessHandler
     {
-        private readonly string root = Path.Combine(Environment.CurrentDirectory, "wwwroot", "YoutubeDL");
-
         public delegate void progressChanged(object source, ProgressArgs args);
         public event progressChanged ProgressEvent;
 
@@ -49,7 +43,7 @@ namespace back.Services
 
         public ProcessStartInfo ProcessInfo(string args)
         {
-            var processInfo = new ProcessStartInfo("youtube-dl.exe", args);
+            var processInfo = new ProcessStartInfo(Paths.Root + "\\youtube-dl.exe", args);
             processInfo.CreateNoWindow = true;
             processInfo.UseShellExecute = false;
             processInfo.RedirectStandardError = true;

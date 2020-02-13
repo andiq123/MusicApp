@@ -29,25 +29,25 @@ namespace ttsBackEnd.Services
 
                 Parallel.ForEach<IElement>(canzoni, song =>
                   {
-                      string Name = song.GetAttribute("no name");
-                      string Artist = song.GetAttribute("data-artist");
-                      string CoverArt;
+                      string name = song.GetAttribute("no name");
+                      string artist = song.GetAttribute("data-artist");
+                      string coverArt;
                       try
                       {
-                          CoverArt = song.GetAttribute("data-img");
+                          coverArt = song.GetAttribute("data-img");
                       }
                       catch
                       {
-                          CoverArt = $"https://icon-library.net/images/song-icon-png/song-icon-png-23.jpg";
+                          coverArt = $"https://icon-library.net/images/song-icon-png/song-icon-png-23.jpg";
                       }
-                      string Url = song.GetAttribute("data-track");
+                      string url = song.GetAttribute("data-track");
                       songList.Add(new Song
                       {
-                          name = Name,
-                          artist = Artist,
-                          album = Name,
-                          cover_art_url = CoverArt,
-                          url = Url
+                          Name = name,
+                          Artist = artist,
+                          Album = name,
+                          Cover_art_url = coverArt,
+                          Url = url
                       });
                   });
 
