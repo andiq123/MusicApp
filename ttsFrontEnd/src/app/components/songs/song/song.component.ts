@@ -19,7 +19,7 @@ import { saveAs } from "file-saver";
 })
 export class SongComponent implements OnInit, AfterViewInit {
   emptyCard: boolean = false;
-  @ViewChild("backgroundDiv", { static: false }) backgroundDiv: ElementRef;
+  @ViewChild("backgroundDiv") backgroundDiv: ElementRef;
   @Input() song: Song;
   constructor(
     private songService: SongsService,

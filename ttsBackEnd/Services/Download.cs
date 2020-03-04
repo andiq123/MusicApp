@@ -33,33 +33,6 @@ namespace back.Services
             await wc.DownloadFileTaskAsync(new Uri(file.Url), destination);
             return destination;
         }
-
-        public async Task<byte[]> downloadSongStream(DownFileModel file)
-        {
-            WebClient wc = new WebClient();
-            byte[] data = await wc.DownloadDataTaskAsync(file.Url);
-            return data;
-        }
-
-        public async Task<string> downloadHttpMethod(DownFileModel file)
-        {
-            string Output = Paths.Output + file.Name + ".mp3";
-            HttpWebRequest httpWebRequest = (HttpWebRequest)WebRequest.Create(file.Url);
-            httpWebRequest.Method = WebRequestMethods.Http.Get;
-            HttpWebResponse httpWebResponse = (HttpWebResponse)httpWebRequest.GetResponse();
-            Stream httpResponseStream = httpWebResponse.GetResponseStream();
-            int bufferSize = 1024;
-            byte[] buffer = new byte[bufferSize];
-            int bytesRead = 0;
-            FileStream fileStream = File.Create(Output);
-            while ((bytesRead = await httpResponseStream.ReadAsync(buffer, 0, bufferSize)) != 0)
-            {
-                System.Console.WriteLine("miaw epta");
-                await fileStream.WriteAsync(buffer, 0, bytesRead);
-            }
-            return Output;
-        }
-
         private async void progressChanged(object sender, DownloadProgressChangedEventArgs e)
         {
             await _hub.Clients.All.SendAsync("progressChanged", e.ProgressPercentage);
