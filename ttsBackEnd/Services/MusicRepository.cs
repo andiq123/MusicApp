@@ -8,11 +8,13 @@ namespace ttsBackEnd.Services
     {
         private readonly IMuzfan _muzFan;
         private readonly IMixmuz _mixMuz;
+        private readonly IUserRepository _repo;
 
-        public MusicRepository(IMuzfan muzfan, IMixmuz mixmuz)
+        public MusicRepository(IMuzfan muzfan, IMixmuz mixmuz, IUserRepository repo)
         {
             this._muzFan = muzfan;
             this._mixMuz = mixmuz;
+            this._repo = repo;
         }
 
         public async Task<ICollection<Song>> GetMusicAsync(string name)
@@ -28,5 +30,6 @@ namespace ttsBackEnd.Services
 
             return songs.ToArray();
         }
+
     }
 }

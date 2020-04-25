@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
@@ -11,6 +12,7 @@ using ttsBackEnd.Services;
 
 namespace ttsBackEnd.Controllers
 {
+    [Authorize]
     [ApiController]
     [Route("api/[controller]")]
     public class SongController : ControllerBase
@@ -21,6 +23,7 @@ namespace ttsBackEnd.Controllers
             this._repo = repo;
         }
 
+        [AllowAnonymous]
         [HttpGet]
         public async Task<ActionResult<ICollection<Song>>> GetAsync([FromQuery]string name)
         {
@@ -30,6 +33,7 @@ namespace ttsBackEnd.Controllers
             if (songs.Count == 0) return NotFound();
             return songs.ToArray();
         }
+
 
         //Old Version sync, takes longer
         // [HttpGet]
