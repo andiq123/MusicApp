@@ -17,7 +17,7 @@
         "ASPNETCORE_ENVIRONMENT": "Development"
       }
     },
-    "back": {
+    "ttsBackEnd": {
       "commandName": "Project",
       "launchUrl": "songs",
       "environmentVariables": {

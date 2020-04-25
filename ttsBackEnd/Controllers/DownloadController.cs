@@ -12,6 +12,7 @@ using Microsoft.Net.Http.Headers;
 using test.Models;
 
 using ttsBackEnd.HubConfig;
+using ttsBackEnd.Services;
 
 namespace test.Controllers
 {
@@ -19,20 +20,18 @@ namespace test.Controllers
     [Route("api/[controller]")]
     public class DownloadController : ControllerBase
     {
-        private readonly Download _download;
-        private Stopwatch _watch;
+        private readonly IDownloadRepository _repo;
 
-        public DownloadController(IHubContext<StatusHub> hub)
+        public DownloadController(IDownloadRepository repo)
         {
-            _download = new Download(hub);
-            _watch = new Stopwatch();
+            this._repo = repo;
         }
 
         [HttpPost]
         public async Task<IActionResult> Get(DownFileModel file)
         {
             if (file == null) BadRequest("No file was added");
-            var fileFromServer = await _download.downloadSongFromSource(file);
+            var fileFromServer = await _repo.downloadSongFromSource(file);
             return File(System.IO.File.OpenRead(fileFromServer), "audio/mpeg");
         }
 

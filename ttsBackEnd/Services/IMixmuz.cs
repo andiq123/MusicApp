@@ -1,11 +1,12 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using back.Models;
+using ttsBackEnd.Models;
 
 namespace ttsBackEnd.Services
 {
-    public interface ISource
+    public interface IMixmuz
     {
         Task<IEnumerable<Song>> Get(string name);
+
     }
 }

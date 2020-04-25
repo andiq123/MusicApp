@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace back.Services.Helpers
+namespace ttsBackEnd.Services.Helpers
 {
     public static class Paths
     {

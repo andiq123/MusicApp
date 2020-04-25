@@ -1,6 +1,6 @@
 using System;
 
-namespace back.Models
+namespace ttsBackEnd.Models
 {
     public class Song
     {

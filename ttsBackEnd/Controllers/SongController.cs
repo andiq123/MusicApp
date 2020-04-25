@@ -1,8 +1,9 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Linq;
 using System.Threading.Tasks;
-using back.Models;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
 using ttsBackEnd.Models;
@@ -12,30 +13,22 @@ namespace ttsBackEnd.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
-    public class MusicController : ControllerBase
+    public class SongController : ControllerBase
     {
-        private readonly IOptions<Sources> _config;
-        private readonly ISource _mixMuz;
-        private readonly ISource _muzFan;
-
-        public MusicController(IOptions<Sources> config)
+        private readonly IMusicRepository _repo;
+        public SongController(IMusicRepository repo)
         {
-            _config = config;
-            _mixMuz = new Mixmuz(_config);
-            _muzFan = new Muzfan(_config);
+            this._repo = repo;
         }
 
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Song>>> GetAsync([FromQuery]string name)
+        public async Task<ActionResult<ICollection<Song>>> GetAsync([FromQuery]string name)
         {
-            List<Task<IEnumerable<Song>>> tasks = new List<Task<IEnumerable<Song>>>();
-            tasks.Add(_mixMuz.Get(name));
-            tasks.Add(_muzFan.Get(name));
-            var results = await Task.WhenAll(tasks);
-            List<Song> songs = new List<Song>();
-            Parallel.ForEach<IEnumerable<Song>>(results, item => songs.AddRange(item));
+            if (String.IsNullOrEmpty(name)) return BadRequest("No song name was given");
+            var songs = await _repo.GetMusicAsync(name);
+            if (songs == null) return StatusCode(500);
             if (songs.Count == 0) return NotFound();
-            return songs;
+            return songs.ToArray();
         }
 
         //Old Version sync, takes longer

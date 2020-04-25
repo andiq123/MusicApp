@@ -2,32 +2,32 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using AngleSharp.Dom;
 using AngleSharp.Html.Dom;
-using back.Models;
 using Microsoft.Extensions.Options;
 using ttsBackEnd.Models;
 
 namespace ttsBackEnd.Services
 {
-    public class Muzfan : ISource
+    public class Muzfan : IMuzfan
     {
-        private readonly Scrapper _scrapper;
+        private readonly IScrapper _scrapper;
         private readonly IOptions<Sources> _options;
 
-        public Muzfan(IOptions<Sources> options)
+        public Muzfan(IOptions<Sources> options, IScrapper scrapper)
         {
             _options = options;
-            _scrapper = new Scrapper();
+            _scrapper = scrapper;
         }
 
         public async Task<IEnumerable<Song>> Get(string name)
         {
             IHtmlDocument document = await _scrapper.GetPage(_options.Value.MuzfanBaseUrl + name);
+            if (document == null) return null;
             List<Song> songList = new List<Song>();
-            IHtmlCollection<IElement> canzoni = document.QuerySelectorAll("div.track-item");
+            IHtmlCollection<IElement> songs = document.QuerySelectorAll("div.track-item");
             await Task.Run(() =>
             {
 
-                Parallel.ForEach<IElement>(canzoni, song =>
+                Parallel.ForEach<IElement>(songs, song =>
                   {
                       string name = song.GetAttribute("no name");
                       string artist = song.GetAttribute("data-artist");
@@ -53,7 +53,6 @@ namespace ttsBackEnd.Services
 
             });
             return songList;
-
         }
     }
 }

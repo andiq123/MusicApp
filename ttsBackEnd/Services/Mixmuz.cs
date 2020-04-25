@@ -2,31 +2,31 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using AngleSharp.Dom;
 using AngleSharp.Html.Dom;
-using back.Models;
 using Microsoft.Extensions.Options;
 using ttsBackEnd.Models;
 
 namespace ttsBackEnd.Services
 {
-    public class Mixmuz : ISource
+    public class Mixmuz : IMixmuz
     {
-        private readonly Scrapper _scrapper;
+        private readonly IScrapper _scrapper;
         private readonly IOptions<Sources> _config;
 
-        public Mixmuz(IOptions<Sources> config)
+        public Mixmuz(IOptions<Sources> config, IScrapper scrapper)
         {
-            _config = config;
-            _scrapper = new Scrapper();
+            this._scrapper = scrapper;
+            this._config = config;
         }
 
         public async Task<IEnumerable<Song>> Get(string name)
         {
             IHtmlDocument document = await _scrapper.GetPage(_config.Value.MixmuzBaseUrl + name);
+            if (document == null) return null;
             List<Song> songList = new List<Song>();
-            IHtmlCollection<IElement> canzoni = document.QuerySelectorAll("div.item");
+            IHtmlCollection<IElement> songs = document.QuerySelectorAll("div.item");
             await Task.Run(() =>
             {
-                Parallel.ForEach<IElement>(canzoni, (song) =>
+                Parallel.ForEach<IElement>(songs, (song) =>
                     {
                         string name = song.QuerySelector("div.title span.t").InnerHtml;
                         string artist = song.QuerySelector("div.title span.a a").InnerHtml;

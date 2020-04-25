@@ -1,11 +1,10 @@
 ﻿using System.Collections.Generic;
 using System.Diagnostics;
 using System.Threading.Tasks;
-using back.Services.Helpers;
-using back.Services.Youtube_DL.Models;
-using back.Services.YoutubeDL;
+using ttsBackEnd.Services.Helpers;
+using ttsBackEnd.Services.Youtube_DL.Models;
 
-namespace back.Services
+namespace ttsBackEnd.Services
 {
     public class ProcessHandler
     {

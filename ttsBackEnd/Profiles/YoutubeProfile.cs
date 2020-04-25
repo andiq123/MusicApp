@@ -1,11 +1,7 @@
 ﻿using AutoMapper;
-using back.Services.YoutubeDL.Entities;
-using back.Services.YoutubeDL.Models;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using ttsBackEnd.Services.YoutubeDL.Entities;
+using ttsBackEnd.Services.YoutubeDL.Models;
 
 namespace back.Services.YoutubeDL.Profiles
 {

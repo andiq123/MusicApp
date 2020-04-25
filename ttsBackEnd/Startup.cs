@@ -1,20 +1,20 @@
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+using System.Net;
+using System.Net.Http;
+using AngleSharp.Html.Parser;
 using AutoMapper;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.HttpsPolicy;
-using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Logging;
+using ttsBackEnd.Data;
 using ttsBackEnd.HubConfig;
 using ttsBackEnd.Models;
+using ttsBackEnd.Services;
 
-namespace back
+namespace ttsBackEnd
 {
     public class Startup
     {
@@ -28,13 +28,22 @@ namespace back
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddDbContext<DataContext>(x => x.UseSqlite(Configuration.GetConnectionString("DefaultConnection")));
             services.AddCors(options =>
             {
                 options.AddPolicy("CorsPolicy", Builder => Builder.AllowAnyOrigin().AllowAnyHeader().AllowAnyMethod());
             });
             services.Configure<Sources>(Configuration.GetSection("Sources"));
             services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
+            services.AddScoped<IScrapper, Scrapper>();
+            services.AddScoped<IMuzfan, Muzfan>();
+            services.AddScoped<IMixmuz, Mixmuz>();
+            services.AddScoped<IMusicRepository, MusicRepository>();
+            services.AddScoped<IDownloadRepository, DownloadRepository>();
+            services.AddScoped<WebClient>();
+            services.AddScoped<HttpClient>();
             services.AddSignalR();
+
             services.AddControllers();
         }
 
@@ -45,9 +54,8 @@ namespace back
             {
                 app.UseDeveloperExceptionPage();
             }
-            app.UseHttpsRedirection();
             app.UseRouting();
-            //app.UseCors("CorsPolicy");
+            app.UseCors("CorsPolicy");
             app.UseAuthorization();
             app.UseDefaultFiles();
             app.UseStaticFiles();

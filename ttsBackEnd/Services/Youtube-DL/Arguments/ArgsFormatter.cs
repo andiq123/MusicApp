@@ -1,16 +1,10 @@
-﻿using back.Services.Helpers;
-using back.Services.YoutubeDL.Arguments;
-using back.Services.YoutubeDL.Entities;
-using back.Services.YoutubeDL.Format;
-using back.Services.YoutubeDL.Models;
-using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.IO;
+using ttsBackEnd.Services.Helpers;
+using ttsBackEnd.Services.YoutubeDL.Arguments;
+using ttsBackEnd.Services.YoutubeDL.Entities;
+using ttsBackEnd.Services.YoutubeDL.Format;
 
-namespace back.Services.YoutubeDL
+namespace ttsBackEnd.Services.YoutubeDL
 {
     public static class ArgsFormatter
     {

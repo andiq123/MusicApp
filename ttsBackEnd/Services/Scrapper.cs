@@ -7,19 +7,30 @@ using AngleSharp.Html.Parser;
 
 namespace ttsBackEnd.Services
 {
-    public class Scrapper
+    public class Scrapper : IScrapper
     {
-        private readonly HttpClient httpClient;
-        public Scrapper()
+        private readonly HttpClient _httpClient;
+        private readonly IHtmlParser _parser;
+        public Scrapper(HttpClient client)
         {
-            httpClient = new HttpClient();
+            this._httpClient = client;
+            this._parser = new HtmlParser();
         }
         public async Task<IHtmlDocument> GetPage(string url)
         {
-            HttpResponseMessage request = await httpClient.GetAsync(new Uri(url), HttpCompletionOption.ResponseHeadersRead);
-            Stream respone = await request.Content.ReadAsStreamAsync();
-            IHtmlDocument document = new HtmlParser().ParseDocument(respone);
-            return document;
+            using (HttpResponseMessage request = await _httpClient.GetAsync(new Uri(url), HttpCompletionOption.ResponseHeadersRead))
+            {
+                if (request.IsSuccessStatusCode)
+                {
+                    Stream respone = await request.Content.ReadAsStreamAsync();
+                    IHtmlDocument document = _parser.ParseDocument(respone);
+                    return document;
+                }
+                else
+                {
+                    return null;
+                }
+            }
         }
     }
 }
