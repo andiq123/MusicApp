@@ -1,6 +1,6 @@
 using System.ComponentModel.DataAnnotations;
 
-namespace test.Models
+namespace ttsBackEnd.Models
 {
     public class DownFileModel
     {

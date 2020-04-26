@@ -1,14 +1,16 @@
 using System;
 using System.Net;
 using System.Net.Http;
-using AngleSharp.Html.Parser;
+using System.Text;
 using AutoMapper;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Microsoft.IdentityModel.Tokens;
 using ttsBackEnd.Data;
 using ttsBackEnd.HubConfig;
 using ttsBackEnd.Models;
@@ -35,15 +37,27 @@ namespace ttsBackEnd
             });
             services.Configure<Sources>(Configuration.GetSection("Sources"));
             services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
+            services.AddScoped<IAuthRepository, AuthRepository>();
+            services.AddScoped<IUserRepository, UserRepository>();
             services.AddScoped<IScrapper, Scrapper>();
             services.AddScoped<IMuzfan, Muzfan>();
             services.AddScoped<IMixmuz, Mixmuz>();
             services.AddScoped<IMusicRepository, MusicRepository>();
             services.AddScoped<IDownloadRepository, DownloadRepository>();
+            services.AddScoped<IFavsongRepository, FavsongRepository>();
             services.AddScoped<WebClient>();
             services.AddScoped<HttpClient>();
             services.AddSignalR();
-
+            services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJwtBearer(options =>
+            {
+                options.TokenValidationParameters = new TokenValidationParameters
+                {
+                    ValidateIssuerSigningKey = true,
+                    IssuerSigningKey = new SymmetricSecurityKey(Encoding.ASCII.GetBytes(Configuration.GetSection("AppSettings:Token").Value)),
+                    ValidateIssuer = false,
+                    ValidateAudience = false
+                };
+            });
             services.AddControllers();
         }
 
@@ -55,8 +69,9 @@ namespace ttsBackEnd
                 app.UseDeveloperExceptionPage();
             }
             app.UseRouting();
-            app.UseCors("CorsPolicy");
+            app.UseAuthentication();
             app.UseAuthorization();
+            app.UseCors("CorsPolicy");
             app.UseDefaultFiles();
             app.UseStaticFiles();
             app.UseEndpoints(endpoints =>

@@ -1,21 +1,12 @@
-using System;
-using System.Diagnostics;
-using System.IO;
-using System.Net;
-using System.Net.Http;
-using System.Text;
 using System.Threading.Tasks;
-using back.Services;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.SignalR;
-using Microsoft.Net.Http.Headers;
-using test.Models;
-
-using ttsBackEnd.HubConfig;
+using ttsBackEnd.Models;
 using ttsBackEnd.Services;
 
 namespace test.Controllers
 {
+    [Authorize]
     [ApiController]
     [Route("api/[controller]")]
     public class DownloadController : ControllerBase

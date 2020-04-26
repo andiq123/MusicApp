@@ -2,10 +2,9 @@
 using System;
 using System.IO;
 using System.Net;
-using System.Net.Http;
 using System.Threading.Tasks;
-using test.Models;
 using ttsBackEnd.HubConfig;
+using ttsBackEnd.Models;
 using ttsBackEnd.Services.Helpers;
 
 namespace ttsBackEnd.Services

@@ -7,6 +7,6 @@ namespace ttsBackEnd.Data
     {
         public DataContext(DbContextOptions<DataContext> options) : base(options) { }
         public DbSet<User> Users { get; set; }
-        public DbSet<Song> Songs { get; set; }
+        public DbSet<FavoriteSong> FavSongs { get; set; }
     }
 }
