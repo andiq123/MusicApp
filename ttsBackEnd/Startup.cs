@@ -45,6 +45,7 @@ namespace ttsBackEnd
             services.AddScoped<IMusicRepository, MusicRepository>();
             services.AddScoped<IDownloadRepository, DownloadRepository>();
             services.AddScoped<IFavsongRepository, FavsongRepository>();
+            services.AddScoped<ILoggerRepository, LoggerRepository>();
             services.AddScoped<WebClient>();
             services.AddScoped<HttpClient>();
             services.AddSignalR();

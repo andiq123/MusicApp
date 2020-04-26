@@ -1,3 +1,4 @@
+using System.Security.Claims;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -19,7 +20,6 @@ namespace ttsBackEnd.Controllers
             this._songRepo = songRepo;
         }
 
-        [AllowAnonymous]
         [HttpGet]
         public async Task<IActionResult> GetUsers()
         {
@@ -42,6 +42,24 @@ namespace ttsBackEnd.Controllers
             var songs = await _songRepo.GetUserSong(userId);
             if (songs.Length == 0) return NotFound($"This user doesn't have any favorite songs");
             return Ok(songs);
+        }
+
+        [HttpDelete("{userId}")]
+        public async Task<IActionResult> DeleteUser(int userId)
+        {
+            var userDeletedSuccessFull = await _repo.DeleteUser(userId);
+            if (!userDeletedSuccessFull) return NotFound("No user found to delete");
+            return Ok("User deleted");
+        }
+
+        [HttpPost("updateLastOnline")]
+        public async Task<IActionResult> UpdateLastOnline()
+        {
+            var claimsIdentity = this.User.Identity as ClaimsIdentity;
+            var userId = int.Parse(claimsIdentity.FindFirst(ClaimTypes.NameIdentifier)?.Value);
+            var updateSuccessfully = await _repo.UpdateLastOnline(userId);
+            if (!updateSuccessfully) return NotFound("No User found to update");
+            return Ok("Last online updated succesfully");
         }
     }
 }

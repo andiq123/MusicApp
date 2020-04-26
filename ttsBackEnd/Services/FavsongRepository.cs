@@ -37,5 +37,15 @@ namespace ttsBackEnd.Services
             await _context.SaveChangesAsync();
             return true;
         }
+
+        public async Task<bool> RemoveFavoriteSongFromUser(int songId, int userId)
+        {
+            var favsong = await _context.FavSongs.FirstOrDefaultAsync(x => x.ID == songId);
+            if (favsong == null) return false;
+            if (favsong.UserID != userId) return false;
+            _context.FavSongs.Remove(favsong);
+            await _context.SaveChangesAsync();
+            return true;
+        }
     }
 }

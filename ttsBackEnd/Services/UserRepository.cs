@@ -7,7 +7,6 @@ using ttsBackEnd.Models;
 
 namespace ttsBackEnd.Services
 {
-
     public class UserRepository : IUserRepository
     {
         private readonly DataContext _context;
@@ -27,6 +26,15 @@ namespace ttsBackEnd.Services
             return await _context.Users.ToArrayAsync();
         }
 
+        public async Task<Boolean> UpdateLastOnline(int userId)
+        {
+            var user = await _context.Users.FirstOrDefaultAsync(x => x.ID == userId);
+            if (user == null) return false;
+            user.LastOnline = DateTime.Now;
+            await _context.SaveChangesAsync();
+            return true;
+        }
+
         public async Task UpdateUser(User user)
         {
             var userFromDb = await _context.Users.FirstOrDefaultAsync(x => x.ID == user.ID);
@@ -38,11 +46,13 @@ namespace ttsBackEnd.Services
             await _context.SaveChangesAsync();
         }
 
-        public async Task DeleteUser(int userId)
+        public async Task<Boolean> DeleteUser(int userId)
         {
             var user = await _context.Users.FirstOrDefaultAsync(x => x.ID == userId);
+            if (user == null) return false;
             _context.Users.Remove(user);
             await _context.SaveChangesAsync();
+            return true;
         }
 
     }

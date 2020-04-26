@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Claims;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -15,9 +16,12 @@ namespace ttsBackEnd.Controllers
     public class SongController : ControllerBase
     {
         private readonly IMusicRepository _repo;
-        public SongController(IMusicRepository repo)
+        private readonly ILoggerRepository _loggerRepository;
+
+        public SongController(IMusicRepository repo, ILoggerRepository loggerRepository)
         {
             this._repo = repo;
+            this._loggerRepository = loggerRepository;
         }
 
         [HttpGet]
@@ -27,6 +31,15 @@ namespace ttsBackEnd.Controllers
             var songs = await _repo.GetMusicAsync(name);
             if (songs == null) return StatusCode(500);
             if (songs.Count == 0) return NotFound();
+
+            //log
+            var claimsIdentity = this.User.Identity as ClaimsIdentity;
+            var log = new LogActivity();
+            log.UserID = int.Parse(claimsIdentity.FindFirst(ClaimTypes.NameIdentifier)?.Value);
+            log.Username = claimsIdentity.FindFirst(ClaimTypes.Name)?.Value;
+            log.Description = $"{log.Username} has Searched for: {name}";
+            await _loggerRepository.LogActivity(log);
+
             return songs.ToArray();
         }
 

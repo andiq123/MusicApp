@@ -47,6 +47,26 @@ namespace ttsBackEnd.Migrations
                     b.ToTable("FavSongs");
                 });
 
+            modelBuilder.Entity("ttsBackEnd.Models.LogActivity", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER");
+
+                    b.Property<string>("Description")
+                        .HasColumnType("TEXT");
+
+                    b.Property<int>("UserID")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<string>("Username")
+                        .HasColumnType("TEXT");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Activities");
+                });
+
             modelBuilder.Entity("ttsBackEnd.Models.User", b =>
                 {
                     b.Property<int>("ID")
@@ -82,7 +102,7 @@ namespace ttsBackEnd.Migrations
             modelBuilder.Entity("ttsBackEnd.Models.FavoriteSong", b =>
                 {
                     b.HasOne("ttsBackEnd.Models.User", "User")
-                        .WithMany("FavoriteSongs")
+                        .WithMany()
                         .HasForeignKey("UserID")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
