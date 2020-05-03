@@ -9,5 +9,6 @@ namespace ttsBackEnd.Data
         public DbSet<User> Users { get; set; }
         public DbSet<FavoriteSong> FavSongs { get; set; }
         public DbSet<LogActivity> Activities { get; set; }
+        public DbSet<LogSong> LoggedSongs { get; set; }
     }
 }

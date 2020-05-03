@@ -6,10 +6,13 @@ namespace ttsBackEnd.Services
 {
     public interface IUserRepository
     {
-        Task<Boolean> DeleteUser(int userId);
+        Task<bool> AddSongToFavoriteToUser(int userId, Song song);
+        Task<bool> DeleteUser(int userId);
         Task<User> GetUser(int userId);
-        Task<Boolean> UpdateLastOnline(int userId);
         Task<User[]> GetUsers();
+        Task<bool> RemoveFavoriteSongFromUser(int userId, int songId);
+        Task<bool> SaveAll();
+        Task<bool> UpdateLastOnline(int userId);
         Task UpdateUser(User user);
     }
 }

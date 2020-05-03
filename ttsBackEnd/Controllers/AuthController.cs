@@ -31,10 +31,12 @@ namespace ttsBackEnd.Controllers
             if (userDto == null) return BadRequest("Empty user");
             userDto.UserName = userDto.UserName.ToLower();
             var userAlreadyExist = await _repo.UserExists(userDto.UserName);
+            if (userAlreadyExist) return BadRequest("User Already Exists");
             var userToCreate = new User();
             userToCreate.UserName = userDto.UserName;
             userToCreate.UserName = userDto.Email;
             var userCreated = await _repo.Register(userToCreate, userDto.Password);
+            if (!await _repo.SaveAll()) return BadRequest("couldn't register this user");
             return StatusCode(201);
         }
 
@@ -59,6 +61,14 @@ namespace ttsBackEnd.Controllers
             var token = tokenHandler.CreateToken(tokenDescriptor);
 
             return Ok(new { token = tokenHandler.WriteToken(token) });
+        }
+
+        [HttpPost("checkexists/{username}")]
+        public async Task<IActionResult> CheckUser(string username)
+        {
+            var userAlreadyExist = await _repo.UserExists(username);
+            if (userAlreadyExist) return BadRequest("User Already Exists");
+            return Ok(!userAlreadyExist);
         }
     }
 }

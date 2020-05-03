@@ -16,9 +16,9 @@ namespace ttsBackEnd.Services
             this._context = context;
         }
 
-        public async Task<User> Login(string usernameOrEmail, string password)
+        public async Task<User> Login(string username, string password)
         {
-            var user = await _context.Users.FirstOrDefaultAsync(x => x.UserName == usernameOrEmail || x.Email == usernameOrEmail);
+            var user = await _context.Users.FirstOrDefaultAsync(x => x.UserName == username);
             if (user == null) return null;
             if (!verifyPassword(password, user.PasswordSalt, user.PasswordHash)) return null;
             return user;
@@ -45,13 +45,12 @@ namespace ttsBackEnd.Services
             user.PasswordSalt = passwordSalt;
             user.DateJoined = DateTime.Now;
             await _context.Users.AddAsync(user);
-            await _context.SaveChangesAsync();
             return user;
         }
 
         public async Task<bool> UserExists(string username)
         {
-            return await _context.Users.AnyAsync(x => x.UserName == username || x.Email == username);
+            return await _context.Users.AnyAsync(x => x.UserName == username);
         }
 
         private void CreatePassword(out byte[] passwordHash, out byte[] passwordSalt, string password)
@@ -63,6 +62,10 @@ namespace ttsBackEnd.Services
             }
         }
 
+        public async Task<Boolean> SaveAll()
+        {
+            return await _context.SaveChangesAsync() > 0;
+        }
 
     }
 }

@@ -12,12 +12,10 @@ namespace ttsBackEnd.Controllers
     public class UsersController : ControllerBase
     {
         private readonly IUserRepository _repo;
-        private readonly IFavsongRepository _songRepo;
 
-        public UsersController(IUserRepository repo, IFavsongRepository songRepo)
+        public UsersController(IUserRepository repo)
         {
             this._repo = repo;
-            this._songRepo = songRepo;
         }
 
         [HttpGet]
@@ -36,19 +34,12 @@ namespace ttsBackEnd.Controllers
             return Ok(user);
         }
 
-        [HttpGet("{userId}/favsongs")]
-        public async Task<IActionResult> GetUserSongs(int userId)
-        {
-            var songs = await _songRepo.GetUserSong(userId);
-            if (songs.Length == 0) return NotFound($"This user doesn't have any favorite songs");
-            return Ok(songs);
-        }
-
         [HttpDelete("{userId}")]
         public async Task<IActionResult> DeleteUser(int userId)
         {
             var userDeletedSuccessFull = await _repo.DeleteUser(userId);
             if (!userDeletedSuccessFull) return NotFound("No user found to delete");
+            if (!await _repo.SaveAll()) return BadRequest("couldn't delete user");
             return Ok("User deleted");
         }
 
@@ -59,6 +50,7 @@ namespace ttsBackEnd.Controllers
             var userId = int.Parse(claimsIdentity.FindFirst(ClaimTypes.NameIdentifier)?.Value);
             var updateSuccessfully = await _repo.UpdateLastOnline(userId);
             if (!updateSuccessfully) return NotFound("No User found to update");
+            if (!await _repo.SaveAll()) return BadRequest("couldn't update user");
             return Ok("Last online updated succesfully");
         }
     }

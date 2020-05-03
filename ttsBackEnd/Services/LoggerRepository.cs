@@ -18,8 +18,7 @@ namespace ttsBackEnd.Services
 
         public async Task LogActivity(LogActivity activity)
         {
-            await _context.AddAsync(activity);
-            await _context.SaveChangesAsync();
+            await _context.Activities.AddAsync(activity);
         }
 
         public async Task<LogActivity[]> GetActivities()
@@ -39,8 +38,30 @@ namespace ttsBackEnd.Services
             var activity = await _context.Activities.FirstOrDefaultAsync(x => x.Id == id);
             if (activity == null) return false;
             _context.Activities.Remove(activity);
-            await _context.SaveChangesAsync();
             return true;
+        }
+
+        public async Task LogSong(LogSong song)
+        {
+            await _context.LoggedSongs.AddAsync(song);
+        }
+
+        public async Task<LogSong[]> GetLoggedSongsForUser(int userId)
+        {
+            var songs = await _context.LoggedSongs.Where(x => x.UserId == userId).ToListAsync();
+            if (songs.Count == 0) return null;
+            return songs.ToArray();
+        }
+
+        public async Task DeleteSong(int logSongId)
+        {
+            var song = await _context.Activities.FirstOrDefaultAsync(x => x.Id == logSongId);
+            _context.Remove(song);
+        }
+
+        public async Task<Boolean> SaveAll()
+        {
+            return await _context.SaveChangesAsync() > 0;
         }
     }
 }

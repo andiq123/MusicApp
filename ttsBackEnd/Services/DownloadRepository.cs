@@ -23,7 +23,7 @@ namespace ttsBackEnd.Services
             Paths.Output.EnsureDirectoryExists();
         }
 
-        public async Task<string> downloadSongFromSource(DownFileModel file)
+        public async Task<string> downloadSongFromSource(FileDownload file)
         {
             file.Name.checkNameForBadChars();
             string downloadedFilePath = Path.Combine(Paths.Output, file.Name + ".mp3");

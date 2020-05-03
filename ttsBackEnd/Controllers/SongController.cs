@@ -33,10 +33,9 @@ namespace ttsBackEnd.Controllers
             if (songs.Count == 0) return NotFound();
 
             //log
-            var claimsIdentity = this.User.Identity as ClaimsIdentity;
             var log = new LogActivity();
-            log.UserID = int.Parse(claimsIdentity.FindFirst(ClaimTypes.NameIdentifier)?.Value);
-            log.Username = claimsIdentity.FindFirst(ClaimTypes.Name)?.Value;
+            log.UserID = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier)?.Value);
+            log.Username = User.FindFirst(ClaimTypes.Name)?.Value;
             log.Description = $"{log.Username} has Searched for: {name}";
             await _loggerRepository.LogActivity(log);
 

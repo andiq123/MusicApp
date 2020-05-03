@@ -1,6 +1,6 @@
 namespace ttsBackEnd.Models
 {
-    public class FavoriteSong
+    public class LogSong
     {
         public int Id { get; set; }
         public string Name { get; set; }
@@ -8,7 +8,7 @@ namespace ttsBackEnd.Models
         public string Album { get; set; }
         public string Url { get; set; }
         public string Cover_art_url { get; set; }
-        public int UserID { get; set; }
+        public int UserId { get; set; }
         public User User { get; set; }
     }
 }

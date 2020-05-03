@@ -1,8 +1,8 @@
 using System.ComponentModel.DataAnnotations;
 
-namespace ttsBackEnd.Models
+namespace ttsBackEnd.Dto
 {
-    public class DownFileModel
+    public class FileForDownloadDto
     {
         [Required]
         public string Name { get; set; }

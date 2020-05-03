@@ -5,6 +5,6 @@ namespace ttsBackEnd.Services
 {
     public interface IDownloadRepository
     {
-        Task<string> downloadSongFromSource(DownFileModel file);
+        Task<string> downloadSongFromSource(FileDownload file);
     }
 }
