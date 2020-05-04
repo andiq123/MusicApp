@@ -1,12 +1,14 @@
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 
 namespace ttsBackEnd.Models
 {
     public class User
     {
         public int ID { get; set; }
-        public string UserName { get; set; }
+        [Required]
+        public string Username { get; set; }
         public string ProfilePicUrl { get; set; }
         public DateTime LastOnline { get; set; }
         public DateTime DateJoined { get; set; }

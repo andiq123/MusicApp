@@ -29,12 +29,11 @@ namespace ttsBackEnd.Controllers
         public async Task<ActionResult> Register(UserForRegisterDto userDto)
         {
             if (userDto == null) return BadRequest("Empty user");
-            userDto.UserName = userDto.UserName.ToLower();
-            var userAlreadyExist = await _repo.UserExists(userDto.UserName);
+            userDto.Username = userDto.Username.ToLower();
+            var userAlreadyExist = await _repo.UserExists(userDto.Username);
             if (userAlreadyExist) return BadRequest("User Already Exists");
             var userToCreate = new User();
-            userToCreate.UserName = userDto.UserName;
-            userToCreate.UserName = userDto.Email;
+            userToCreate.Username = userDto.Username;
             var userCreated = await _repo.Register(userToCreate, userDto.Password);
             if (!await _repo.SaveAll()) return BadRequest("couldn't register this user");
             return StatusCode(201);
@@ -43,11 +42,11 @@ namespace ttsBackEnd.Controllers
         [HttpPost("login")]
         public async Task<ActionResult> Login(UserForLoginDto userToLogin)
         {
-            var userFromRepo = await _repo.Login(userToLogin.UserNameOrEmail.ToLower(), userToLogin.Password);
+            var userFromRepo = await _repo.Login(userToLogin.Username.ToLower(), userToLogin.Password);
             if (userFromRepo == null) return NotFound("Username or password incorrect");
             var claims = new[]{
-                new Claim(ClaimTypes.NameIdentifier,userFromRepo.ID.ToString()),
-                new Claim(ClaimTypes.Name,userFromRepo.UserName)
+                new Claim(ClaimTypes.NameIdentifier, userFromRepo.ID.ToString()),
+                new Claim(ClaimTypes.Name, userFromRepo.Username)
                      };
             var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_config.GetSection("AppSettings:Token").Value));
             var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha512Signature);

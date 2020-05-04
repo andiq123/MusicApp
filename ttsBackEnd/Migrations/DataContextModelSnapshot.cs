@@ -18,7 +18,7 @@ namespace ttsBackEnd.Migrations
 
             modelBuilder.Entity("ttsBackEnd.Models.FavoriteSong", b =>
                 {
-                    b.Property<int>("ID")
+                    b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("INTEGER");
 
@@ -40,7 +40,7 @@ namespace ttsBackEnd.Migrations
                     b.Property<int>("UserID")
                         .HasColumnType("INTEGER");
 
-                    b.HasKey("ID");
+                    b.HasKey("Id");
 
                     b.HasIndex("UserID");
 
@@ -67,6 +67,37 @@ namespace ttsBackEnd.Migrations
                     b.ToTable("Activities");
                 });
 
+            modelBuilder.Entity("ttsBackEnd.Models.LogSong", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER");
+
+                    b.Property<string>("Album")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Artist")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Cover_art_url")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Name")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Url")
+                        .HasColumnType("TEXT");
+
+                    b.Property<int>("UserId")
+                        .HasColumnType("INTEGER");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("LoggedSongs");
+                });
+
             modelBuilder.Entity("ttsBackEnd.Models.User", b =>
                 {
                     b.Property<int>("ID")
@@ -76,10 +107,7 @@ namespace ttsBackEnd.Migrations
                     b.Property<DateTime>("DateJoined")
                         .HasColumnType("TEXT");
 
-                    b.Property<string>("Email")
-                        .HasColumnType("TEXT");
-
-                    b.Property<DateTime>("LastOnline")
+                    b.Property<DateTime?>("LastOnline")
                         .HasColumnType("TEXT");
 
                     b.Property<byte[]>("PasswordHash")
@@ -91,7 +119,8 @@ namespace ttsBackEnd.Migrations
                     b.Property<string>("ProfilePicUrl")
                         .HasColumnType("TEXT");
 
-                    b.Property<string>("UserName")
+                    b.Property<string>("Username")
+                        .IsRequired()
                         .HasColumnType("TEXT");
 
                     b.HasKey("ID");
@@ -102,8 +131,17 @@ namespace ttsBackEnd.Migrations
             modelBuilder.Entity("ttsBackEnd.Models.FavoriteSong", b =>
                 {
                     b.HasOne("ttsBackEnd.Models.User", "User")
-                        .WithMany()
+                        .WithMany("FavSongs")
                         .HasForeignKey("UserID")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("ttsBackEnd.Models.LogSong", b =>
+                {
+                    b.HasOne("ttsBackEnd.Models.User", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });

@@ -18,6 +18,7 @@ namespace ttsBackEnd.Controllers
             this._repo = repo;
         }
 
+        [AllowAnonymous]
         [HttpGet]
         public async Task<IActionResult> GetUsers()
         {

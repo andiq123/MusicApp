@@ -37,7 +37,7 @@ namespace ttsBackEnd.Services
         public async Task UpdateUser(User user)
         {
             var userFromDb = await _context.Users.FirstOrDefaultAsync(x => x.ID == user.ID);
-            userFromDb.UserName = user.UserName;
+            userFromDb.Username = user.Username;
             userFromDb.ProfilePicUrl = user.ProfilePicUrl;
             userFromDb.PasswordHash = user.PasswordHash;
             userFromDb.PasswordSalt = user.PasswordSalt;
