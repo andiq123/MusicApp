@@ -18,6 +18,16 @@ namespace ttsBackEnd.Services.YoutubeDL
             var arguments = string.Join(' ', activate, audioFormat, audioQuality, output, file.Url);
             return arguments;
         }
+
+        public static string FormatMp4(Youtube file, VideoFormats format)
+        {
+            var activate = VideoArguments.ActivateVideo;
+            var videoQuality = "best";
+            var output = "-o " + Path.Combine(Paths.Output, file.Title.Split(" ")[0] + "." + format.ToString());
+            var arguments = string.Join(' ', activate, videoQuality, file.Url, output);
+            return arguments;
+        }
+
         public static string FormatGetInfo(string link)
         {
             var activate = QuietArguments.Activate;

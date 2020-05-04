@@ -11,11 +11,11 @@ using ttsBackEnd.Services.YoutubeDL.Models;
 
 namespace ttsBackEnd.Services
 {
-    public class YtbConverter
+    public class YoutubeService
     {
         private ProcessHandler _process;
 
-        public YtbConverter()
+        public YoutubeService()
         {
             _process = new ProcessHandler();
         }
@@ -30,12 +30,21 @@ namespace ttsBackEnd.Services
             return fileEntity;
         }
 
-        public async Task<string> Convert(Youtube file)
+        public async Task<string> ConvertMp3(Youtube file)
         {
             var arguments = ArgsFormatter.FormatMp3(file, AudioFormats.mp3);
             _process.ProgressEvent += _process_ProgressEvent;
             List<string> output = await Task.Run(() => _process.Start(arguments, true));
             var path = Path.Combine(Paths.Output, file.Title.Split(" ")[0] + "." + AudioFormats.mp3.ToString());
+            return path;
+        }
+
+        public async Task<string> ConvertMp4(Youtube file)
+        {
+            var arguments = ArgsFormatter.FormatMp4(file, VideoFormats.mp4);
+            _process.ProgressEvent += _process_ProgressEvent;
+            List<string> output = await Task.Run(() => _process.Start(arguments, true));
+            var path = Path.Combine(Paths.Output, file.Title.Split(" ")[0] + "." + VideoFormats.mp4.ToString());
             return path;
         }
 

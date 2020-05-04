@@ -29,7 +29,7 @@ namespace ttsBackEnd.Services
 
                 Parallel.ForEach<IElement>(songs, song =>
                   {
-                      string name = song.GetAttribute("no name");
+                      string title = song.GetAttribute("no name");
                       string artist = song.GetAttribute("data-artist");
                       string coverArt;
                       try
@@ -43,9 +43,9 @@ namespace ttsBackEnd.Services
                       string url = song.GetAttribute("data-track");
                       songList.Add(new Song
                       {
-                          Name = name,
+                          Name = title,
                           Artist = artist,
-                          Album = name,
+                          Album = title,
                           Cover_art_url = coverArt,
                           Url = url
                       });

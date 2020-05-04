@@ -33,7 +33,7 @@ namespace ttsBackEnd.Services
         }
         private void invokeEvent(ProgressArgs args, string line)
         {
-            if (line.Contains("[download]"))
+            if (line != null && line.Contains("[download]"))
             {
                 args.status = line;
                 ProgressEvent?.Invoke(this, args);

@@ -12,12 +12,12 @@ namespace ttsBackEnd.Controllers
     [Route("api/[controller]")]
     public class YoutubeController : ControllerBase
     {
-        private readonly YtbConverter _ytbConverter;
+        private readonly YoutubeService _ytbConverter;
         private Youtube _fileInfo;
 
         public YoutubeController()
         {
-            _ytbConverter = new YtbConverter();
+            _ytbConverter = new YoutubeService();
         }
 
         [HttpGet]
@@ -28,12 +28,22 @@ namespace ttsBackEnd.Controllers
             return Ok(_fileInfo);
         }
 
-        [HttpPost]
+        [HttpPost("video")]
         public async Task<IActionResult> GetVideo(YoutubeDto file)
         {
             if (file == null) return BadRequest();
             else if (_fileInfo == null) _fileInfo = await _ytbConverter.GetInfo(file);
-            var convertedSongPath = await _ytbConverter.Convert(_fileInfo);
+            var convertedSongPath = await _ytbConverter.ConvertMp4(_fileInfo);
+            if (!FileHelper.CheckFileExist(convertedSongPath)) return StatusCode(StatusCodes.Status500InternalServerError, "Something went bad in the server");
+            return File(System.IO.File.OpenRead(convertedSongPath), "audio/mpeg");
+        }
+
+        [HttpPost("audio")]
+        public async Task<IActionResult> GetAudio(YoutubeDto file)
+        {
+            if (file == null) return BadRequest();
+            else if (_fileInfo == null) _fileInfo = await _ytbConverter.GetInfo(file);
+            var convertedSongPath = await _ytbConverter.ConvertMp3(_fileInfo);
             if (!FileHelper.CheckFileExist(convertedSongPath)) return StatusCode(StatusCodes.Status500InternalServerError, "Something went bad in the server");
             return File(System.IO.File.OpenRead(convertedSongPath), "audio/mpeg");
         }

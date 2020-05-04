@@ -28,7 +28,7 @@ namespace ttsBackEnd.Services
             {
                 Parallel.ForEach<IElement>(songs, (song) =>
                     {
-                        string name = song.QuerySelector("div.title span.t").InnerHtml;
+                        string title = song.QuerySelector("div.title span.t").InnerHtml;
                         string artist = song.QuerySelector("div.title span.a a").InnerHtml;
                         string coverArt;
                         try
@@ -42,9 +42,9 @@ namespace ttsBackEnd.Services
                         string url = "https:" + song.QuerySelector("a.down").GetAttribute("href");
                         songList.Add(new Song
                         {
-                            Name = name,
+                            Name = title,
                             Artist = artist,
-                            Album = name,
+                            Album = title,
                             Cover_art_url = coverArt,
                             Url = url
                         });
