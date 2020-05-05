@@ -36,7 +36,7 @@ namespace ttsBackEnd.Controllers
             var log = new LogActivity();
             log.UserID = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier)?.Value);
             log.Username = User.FindFirst(ClaimTypes.Name)?.Value;
-            log.Description = $"{log.Username} has Searched for: {name}";
+            log.Description = $"{log.Username} has searched for: {name}";
             await _loggerRepository.LogActivity(log);
 
             return songs.ToArray();

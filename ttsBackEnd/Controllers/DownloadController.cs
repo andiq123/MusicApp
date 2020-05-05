@@ -32,7 +32,7 @@ namespace test.Controllers
         {
             if (fileFromUrl == null || fileFromUrl.Url.Length <= 0 || fileFromUrl.Name.Length <= 0) BadRequest("No file was added");
             var file = _mapper.Map<FileDownload>(fileFromUrl);
-            // var fileFromServer = await _repo.downloadSongFromSource(file);
+            byte[] fileFromServer = await _repo.downloadSongFromSource(file);
 
             //log
             var log = new LogActivity();
@@ -41,16 +41,28 @@ namespace test.Controllers
             log.Description = $"{log.Username} has downloaded the file: {file.Name}";
             await _loggerRepo.LogActivity(log);
 
-            WebClient urlGrabber = new WebClient();
-            byte[] data = urlGrabber.DownloadData(file.Url);
-            FileStream fileStream = new FileStream(file.Name, FileMode.Open);
-
-            fileStream.Write(data, 0, data.Length);
-            fileStream.Seek(0, SeekOrigin.Begin);
-
-            return (new FileStreamResult(fileStream, "audio/mpeg"));
-
+            Stream stream = new MemoryStream(fileFromServer);
+            stream.Position = 0;
+            return File(stream, "audio/mpeg", fileFromUrl.Name);
             // return File(System.IO.File.OpenRead(fileFromServer), "audio/mpeg");
+        }
+
+        //old
+        [HttpPost("old")]
+        public async Task<IActionResult> GetOld(FileForDownloadDto fileFromUrl)
+        {
+            if (fileFromUrl == null || fileFromUrl.Url.Length <= 0 || fileFromUrl.Name.Length <= 0) BadRequest("No file was added");
+            var file = _mapper.Map<FileDownload>(fileFromUrl);
+            var fileFromServer = await _repo.downloadSongFromSourceOld(file);
+
+            //log
+            var log = new LogActivity();
+            log.UserID = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier)?.Value);
+            log.Username = User.FindFirst(ClaimTypes.Name)?.Value;
+            log.Description = $"{log.Username} has downloaded the file: {file.Name}";
+            await _loggerRepo.LogActivity(log);
+
+            return File(System.IO.File.OpenRead(fileFromServer), "audio/mpeg");
         }
 
     }

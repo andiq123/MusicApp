@@ -13,10 +13,12 @@ namespace ttsBackEnd.Controllers
         public class LoggerController : ControllerBase
         {
             private readonly ILoggerRepository _repo;
+            private readonly IUserRepository _userRepository;
 
-            public LoggerController(ILoggerRepository repo)
+            public LoggerController(ILoggerRepository repo, IUserRepository userRepository)
             {
                 this._repo = repo;
+                this._userRepository = userRepository;
             }
 
             [HttpGet]
@@ -32,6 +34,14 @@ namespace ttsBackEnd.Controllers
             {
                 var logs = await _repo.GetActivityForUser(userId);
                 if (logs.Length == 0) return NotFound("No Logs Found");
+                return Ok(logs);
+            }
+
+            [HttpGet("{userId}/favsongs")]
+            public async Task<IActionResult> GetFavSongsForUser(int userId)
+            {
+                var logs = await _userRepository.GetUserFavSong(userId);
+                if (logs == null || logs.Length == 0) return NotFound("No FavSongs Found");
                 return Ok(logs);
             }
 

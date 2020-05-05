@@ -44,7 +44,7 @@ namespace ttsBackEnd.Services
             user.PasswordHash = passwordHash;
             user.PasswordSalt = passwordSalt;
             user.DateJoined = DateTime.Now;
-            await _context.AddAsync(user);
+            await _context.Users.AddAsync(user);
             return user;
         }
 

@@ -75,6 +75,14 @@ namespace ttsBackEnd.Services
             return true;
         }
 
+        public async Task<FavoriteSong[]> GetUserFavSong(int userId)
+        {
+            var user = await _context.Users.FirstOrDefaultAsync(x => x.ID == userId);
+            if (user == null) return null;
+            if (user.FavSongs.Count == 0) return null;
+            return user.FavSongs.ToArray();
+        }
+
         public async Task<bool> SaveAll()
         {
             return await _context.SaveChangesAsync() > 0;

@@ -107,7 +107,7 @@ namespace ttsBackEnd.Migrations
                     b.Property<DateTime>("DateJoined")
                         .HasColumnType("TEXT");
 
-                    b.Property<DateTime?>("LastOnline")
+                    b.Property<DateTime>("LastOnline")
                         .HasColumnType("TEXT");
 
                     b.Property<byte[]>("PasswordHash")

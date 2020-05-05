@@ -23,7 +23,7 @@ namespace ttsBackEnd.Services
             Paths.Output.EnsureDirectoryExists();
         }
 
-        public async Task<string> downloadSongFromSource(FileDownload file)
+        public async Task<string> downloadSongFromSourceOld(FileDownload file)
         {
             file.Name.checkNameForBadChars();
             string downloadedFilePath = Path.Combine(Paths.Output, file.Name + ".mp3");
@@ -32,6 +32,17 @@ namespace ttsBackEnd.Services
             await _client.DownloadFileTaskAsync(new Uri(file.Url), downloadedFilePath);
             _client.Dispose();
             return downloadedFilePath;
+        }
+
+        public async Task<byte[]> downloadSongFromSource(FileDownload file)
+        {
+            file.Name.checkNameForBadChars();
+            string downloadedFilePath = Path.Combine(Paths.Output, file.Name + ".mp3");
+            if (downloadedFilePath.CheckFileExist()) return await File.ReadAllBytesAsync(downloadedFilePath);
+            _client.DownloadProgressChanged += progressChanged;
+            await _client.DownloadFileTaskAsync(new Uri(file.Url), downloadedFilePath);
+            _client.Dispose();
+            return await File.ReadAllBytesAsync(downloadedFilePath);
         }
 
         private async void progressChanged(object sender, DownloadProgressChangedEventArgs e)

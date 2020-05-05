@@ -14,10 +14,12 @@ namespace ttsBackEnd.Controllers
     {
         private readonly int _userId;
         private readonly IUserRepository _repo;
+        private readonly ILoggerRepository _loggerRepo;
 
-        public FavsongController(IUserRepository repo)
+        public FavsongController(IUserRepository repo, ILoggerRepository loggerRepo)
         {
             this._repo = repo;
+            this._loggerRepo = loggerRepo;
             this._userId = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier)?.Value);
         }
 
@@ -41,6 +43,14 @@ namespace ttsBackEnd.Controllers
             var successAdded = await _repo.AddSongToFavoriteToUser(userId, song);
             if (!successAdded) return NotFound("Error adding the song");
             if (!await _repo.SaveAll()) return BadRequest("couldn't add song to favorite");
+
+            //log
+            var log = new LogActivity();
+            log.UserID = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier)?.Value);
+            log.Username = User.FindFirst(ClaimTypes.Name)?.Value;
+            log.Description = $"{log.Username} has added to favorite the song: {song.Artist} - {song.Name}";
+            await _loggerRepo.LogActivity(log);
+
             return Ok("Song added");
         }
 
@@ -52,6 +62,14 @@ namespace ttsBackEnd.Controllers
             var successRemoved = await _repo.RemoveFavoriteSongFromUser(userId, songId);
             if (!successRemoved) return NotFound("Error deleting the song");
             if (!await _repo.SaveAll()) return BadRequest();
+
+            //log
+            var log = new LogActivity();
+            log.UserID = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier)?.Value);
+            log.Username = User.FindFirst(ClaimTypes.Name)?.Value;
+            log.Description = $"{log.Username} has removed song from favorite: {songId}";
+            await _loggerRepo.LogActivity(log);
+
             return Ok("Song removed");
         }
     }
